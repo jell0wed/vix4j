@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 /**
  * Created by Administrator on 1/7/2015.
  */
-public class VIXLibUtils
+public class VIXLibraryLoader
 {
     public static final String DEFAULT_WINDOWS_x86_VIX_PATH = "C:\\Program Files\\VMware\\VMware VIX";
     public static final String DEFAULT_WINDOWS_x64_VIX_PATH = "C:\\Program Files (x86)\\VMware\\VMware VIX";
