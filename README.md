@@ -16,6 +16,7 @@ Dillinger uses a number of open source projects to work properly:
 
 * VMware SDK (Vix) - https://www.vmware.com/support/developer/vix-api/
 * Java Native Access (JNA) - https://github.com/twall/jna
+* Apache Log4j - http://logging.apache.org/log4j/2.x/
 
 ### Installation
 TODO
