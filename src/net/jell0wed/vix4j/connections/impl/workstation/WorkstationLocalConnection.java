@@ -34,6 +34,6 @@ public final class WorkstationLocalConnection extends AbstractVixConnection
                 null,
                 null);
 
-        VIXLibraryUtils.handleVixJobWithOneResult(this, jobHandle, (Memory) this.getHostHandlePointer());
+        VIXLibraryUtils.handleVixJobWithOneResult(this, jobHandle, IVixLibrary.VIX_PROPERTY_JOB_RESULT_HANDLE, (Memory) this.getHostHandlePointer());
     }
 }

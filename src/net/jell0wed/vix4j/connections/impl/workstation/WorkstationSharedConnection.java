@@ -47,6 +47,6 @@ public final class WorkstationSharedConnection extends AbstractVixConnection {
                 null,
                 null);
 
-        VIXLibraryUtils.passivelyHandleVixJobWithOneResult(this, jobHandle, (Memory) this.getHostHandlePointer());
+        VIXLibraryUtils.passivelyHandleVixJobWithOneResult(this, jobHandle,  IVixLibrary.VIX_PROPERTY_JOB_RESULT_HANDLE, (Memory) this.getHostHandlePointer());
     }
 }
