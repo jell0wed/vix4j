@@ -30,6 +30,7 @@ public abstract class AbstractVixConnection
     }
 
     protected abstract void connectToVixInstance() throws VixException;
+    protected Pointer getHostHandlePointer() { return this.hostHandlePtr; }
 
     public void disconnect()
     {

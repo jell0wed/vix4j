@@ -1,5 +1,6 @@
 package net.jell0wed.vix4j.connections.impl.workstation;
 
+import com.sun.jna.Memory;
 import net.jell0wed.vix4j.connections.AbstractVixConnection;
 import net.jell0wed.vix4j.exceptions.VixException;
 import net.jell0wed.vix4j.utils.VIXLibraryUtils;
@@ -46,6 +47,6 @@ public final class WorkstationSharedConnection extends AbstractVixConnection {
                 null,
                 null);
 
-        VIXLibraryUtils.handleVixJob(this, jobHandle);
+        VIXLibraryUtils.passivelyHandleVixJobWithOneResult(this, jobHandle, (Memory) this.getHostHandlePointer());
     }
 }
