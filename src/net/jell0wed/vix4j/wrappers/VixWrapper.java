@@ -105,6 +105,47 @@ public abstract class VixWrapper implements IVixWrapper
         handleVixJob(this.currentConnection, jobHandle);
     }
 
+    public void VixVM_Reset(int vmHandle, VMPowerOperationTypes resetType) throws VixException
+    {
+        if(resetType != VMPowerOperationTypes.FROM_GUEST && resetType != VMPowerOperationTypes.NORMAL)
+        {
+            throw new RuntimeException(String.format("Invalid resetType '%s'. The only valid types are FROM_GUEST and NORMAL", resetType.toString()));
+        }
+
+        int jobHandle = this.currentVix.VixVM_Reset(vmHandle,
+                resetType.getValue(),
+                null, null);
+
+        handleVixJob(this.currentConnection, jobHandle);
+    }
+
+    public void VixVM_Pause(int vmHandle) throws VixException {
+        int jobHandle = this.currentVix.VixVM_Pause(vmHandle,
+                0,
+                IVixLibrary.VIX_INVALID_HANDLE,
+                null,
+                null);
+
+        handleVixJob(this.currentConnection, jobHandle);
+    }
+
+    public void VixVM_UnPause(int vmHandle) throws VixException {
+        int jobHandle = this.currentVix.VixVM_Unpause(vmHandle,
+                0,
+                IVixLibrary.VIX_INVALID_HANDLE,
+                null, null);
+
+        handleVixJob(this.currentConnection, jobHandle);
+    }
+
+    public void VixVM_Suspend(int vmHandle) throws VixException {
+        int jobHandle = this.currentVix.VixVM_Suspend(vmHandle,
+                0,
+                null, null);
+
+        handleVixJob(this.currentConnection, jobHandle);
+    }
+
     // ---
 
     private boolean asyncCheckJobCompletion(int jobHandle) throws VixException {
@@ -146,6 +187,33 @@ public abstract class VixWrapper implements IVixWrapper
 
         handleVixJob(this.currentConnection, jobHandle);
         return itemsResult;
+    }
+
+    public boolean getPropertyValueAsBoolean(int vixHandle, int propertyType) throws VixException {
+        return this.getPropertyValuePtrFromVM(vixHandle, propertyType, NativeSizes.NATIVE_BYTE_BYTES_SIZE).getByte(0) == 1;
+    }
+
+    public int getPropertyValueAsInteger(int vixHandle, int propertyType) throws VixException {
+        return this.getPropertyValuePtrFromVM(vixHandle, propertyType, NativeSizes.NATIVE_INT_BYTES_SIZE).getInt(0);
+    }
+
+    public String Vix_GetErrorText(int errCode)
+    {
+        return this.currentVix.Vix_GetErrorText(errCode, null);
+    }
+
+    // --
+    private Pointer getPropertyValuePtrFromVM(int vixHandle, int propertyType, int sizeOfMemoryBlock) throws VixException {
+        Pointer memBlockPtr = new Memory(sizeOfMemoryBlock);
+
+        int err = this.currentVix.Vix_GetProperties(vixHandle, propertyType, memBlockPtr, IVixLibrary.VIX_INVALID_HANDLE);
+        if(err != IVixLibrary.VIX_OK)
+        {
+            String errMsg = String.format("Unable to get propertyId (%s) : %s", propertyType, this.Vix_GetErrorText(err));
+            throw new VixException(errMsg);
+        }
+
+        return memBlockPtr;
     }
 
     //
