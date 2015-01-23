@@ -1,4 +1,4 @@
-package net.jell0wed.vix4j;
+package net.jell0wed.vix4j.wrappers;
 
 /**
  * Created by Administrator on 1/12/2015.
