@@ -1,6 +1,7 @@
 package net.jell0wed.vix4j.wrappers.impl.workstation;
 
 import net.jell0wed.vix4j.connections.AbstractVixConnection;
+import net.jell0wed.vix4j.exceptions.VixException;
 import net.jell0wed.vix4j.wrappers.VixVM;
 import net.jell0wed.vix4j.wrappers.VixWrapper;
 
@@ -13,8 +14,7 @@ public class VMwareWorkstation6xVixWrapper extends VixWrapper {
     }
 
     @Override
-    public final VixVM openVM(String url)
-    {
-        throw new UnsupportedOperationException("VMWare workstation 6.x products cannot open VM !");
+    public final VixVM openVM(String url) throws VixException {
+        return this.VixVM_Open(url); // vmware player use the old deprecated way to open vm
     }
 }

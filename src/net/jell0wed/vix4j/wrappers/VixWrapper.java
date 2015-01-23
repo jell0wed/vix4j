@@ -10,6 +10,7 @@ import net.jell0wed.vix4j.utils.NativeSizes;
 import net.jell0wed.vix4j.utils.VIXLibraryLoader;
 import net.jell0wed.vix4j.vendors.IVixEventProcCallback;
 import net.jell0wed.vix4j.vendors.IVixLibrary;
+import net.jell0wed.vix4j.wrappers.impl.enums.VMPowerOperationTypes;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -18,7 +19,7 @@ import java.util.LinkedList;
 /**
  * Created by Administrator on 1/12/2015.
  */
-public abstract class VixWrapper
+public abstract class VixWrapper implements IVixWrapper
 {
     private AbstractVixConnection currentConnection;
     private IVixLibrary currentVix;
@@ -39,15 +40,24 @@ public abstract class VixWrapper
         return this.currentVix;
     }
 
+    // wrapper interface implementation
+    @Override
     public Collection<String> getRunningVMsUrl() throws VixException {
         return this.findItemsByParam(IVixLibrary.VIX_FIND_RUNNING_VMS);
     }
 
+    @Override
     public Collection<String> getRegisteredVMsUrl() throws VixException {
         return this.findItemsByParam(IVixLibrary.VIX_FIND_REGISTERED_VMS);
     }
 
+    @Override
     public VixVM openVM(String url) throws VixException {
+        return this.VixHost_OpenVM(url); // by default, use the non-deprecated way to open vms
+    }
+    // end wrapper interface implementation
+
+    public VixVM VixHost_OpenVM(String url) throws VixException {
         Pointer vmHandleId = new Memory(NativeSizes.NATIVE_INT_BYTES_SIZE);
         int jobHandle = this.currentVix.VixHost_OpenVM(this.currentConnection.getHostHandle(),
                 url,
@@ -59,6 +69,40 @@ public abstract class VixWrapper
         handleVixJobWithOneResult(this.currentConnection, jobHandle, IVixLibrary.VIX_PROPERTY_JOB_RESULT_HANDLE, (Memory) vmHandleId);
 
         return new VixVM(this, url, vmHandleId.getInt(0));
+    }
+
+    public VixVM VixVM_Open(String url) throws VixException {
+        Pointer vmHandleId = new Memory(NativeSizes.NATIVE_INT_BYTES_SIZE);
+        int jobHandle = this.currentVix.VixVM_Open(this.currentConnection.getHostHandle(),
+                url,
+                null, null);
+
+        handleVixJobWithOneResult(this.currentConnection, jobHandle, IVixLibrary.VIX_PROPERTY_JOB_RESULT_HANDLE, (Memory) vmHandleId);
+
+        return new VixVM(this, url, vmHandleId.getInt(0));
+    }
+
+    public void VixVM_PowerOn(int vmHandle, VMPowerOperationTypes powerOnType) throws VixException {
+        int jobHandle = this.currentVix.VixVM_PowerOn(vmHandle,
+                powerOnType.getValue(),
+                IVixLibrary.VIX_INVALID_HANDLE,
+                null, null);
+
+        handleVixJob(this.currentConnection, jobHandle);
+    }
+
+    public void VixVM_PowerOff(int vmHandle, VMPowerOperationTypes powerOffType) throws VixException
+    {
+        if(powerOffType != VMPowerOperationTypes.FROM_GUEST && powerOffType != VMPowerOperationTypes.NORMAL)
+        {
+            throw new RuntimeException(String.format("Invalid powerOffType '%s'. The only valid types are FROM_GUEST and NORMAL", powerOffType.toString()));
+        }
+
+        int jobHandle = this.currentVix.VixVM_PowerOff(vmHandle,
+                powerOffType.getValue(),
+                null, null);
+
+        handleVixJob(this.currentConnection, jobHandle);
     }
 
     // ---
