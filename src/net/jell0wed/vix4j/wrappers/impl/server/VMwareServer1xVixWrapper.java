@@ -1,4 +1,4 @@
-package net.jell0wed.vix4j.wrappers.impl.player;
+package net.jell0wed.vix4j.wrappers.impl.server;
 
 import net.jell0wed.vix4j.connections.AbstractVixConnection;
 import net.jell0wed.vix4j.exceptions.VixException;
@@ -9,8 +9,8 @@ import org.apache.commons.lang3.NotImplementedException;
 /**
  * Created by Administrator on 1/22/2015.
  */
-public class VMwarePlayerVixWrapper extends VixWrapper {
-    protected VMwarePlayerVixWrapper(AbstractVixConnection connection) {
+public class VMwareServer1xVixWrapper extends VixWrapper {
+    protected VMwareServer1xVixWrapper(AbstractVixConnection connection) {
         super(connection);
     }
 
@@ -22,7 +22,7 @@ public class VMwarePlayerVixWrapper extends VixWrapper {
     @Override
     public final void VixVM_Pause(int vmHandle) throws VixException
     {
-        throw new NotImplementedException("VMware Players products doesn't support pause operations !");
+        throw new NotImplementedException("VMware Servers products doesn't support pause operations !");
     }
 
     @Override
