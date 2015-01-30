@@ -763,6 +763,14 @@ public interface IVixLibrary extends Library {
                                      IVixEventProcCallback callbackProc,
                                      Pointer clientData);
 
+    /**
+     * Addded VixVM_Delete
+     */
+    int VixVM_Delete(int vmHandle,
+                     int options,
+                     IVixEventProcCallback callbackProc,
+                     Pointer clientData);
+
     int VixVM_DeleteDirectoryInGuest(int vmHandle,
                                      String pathName,
                                      int options,

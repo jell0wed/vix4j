@@ -146,6 +146,26 @@ public abstract class VixWrapper implements IVixWrapper
         handleVixJob(this.currentConnection, jobHandle);
     }
 
+    public void VixVM_Delete(int vmHandle) throws VixException
+    {
+        int jobHandle = this.currentVix.VixVM_Delete(vmHandle,
+                IVixLibrary.VIX_VMDELETE_DISK_FILES,
+                null, null);
+
+        handleVixJob(this.currentConnection, jobHandle);
+    }
+
+    public void VixVM_CreateSnapshot(int vmHandle, String name, String description, boolean captureMemory) throws VixException {
+        int jobHandle = this.currentVix.VixVM_CreateSnapshot(vmHandle,
+                name,
+                description,
+                captureMemory ? IVixLibrary.VIX_SNAPSHOT_INCLUDE_MEMORY : 0,
+                IVixLibrary.VIX_INVALID_HANDLE,
+                null, null);
+
+        handleVixJob(this.currentConnection, jobHandle);
+    }
+
     // ---
 
     private boolean asyncCheckJobCompletion(int jobHandle) throws VixException {

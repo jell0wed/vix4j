@@ -56,6 +56,19 @@ public class VixVM {
         this.wrapperInstance.VixVM_Suspend(this.vmHandleId);
     }
 
+    public void deleteVM() throws VixException
+    {
+        this.wrapperInstance.VixVM_Delete(this.vmHandleId);
+    }
+
+    public void createSnapshot(String name, String description) throws VixException {
+        this.createSnapshot(name, description, true);
+    }
+
+    public void createSnapshot(String name, String description, boolean includeMemory) throws VixException {
+        this.wrapperInstance.VixVM_CreateSnapshot(this.vmHandleId, name, description, includeMemory);
+    }
+
     public boolean isPoweredOn() throws VixException
     {
         return this.wrapperInstance.getPropertyValueAsInteger(this.vmHandleId, IVixLibrary.VIX_PROPERTY_VM_POWER_STATE) == IVixLibrary.VIX_POWERSTATE_POWERED_ON;
@@ -70,5 +83,7 @@ public class VixVM {
     {
         return this.wrapperInstance.getPropertyValueAsInteger(this.vmHandleId, IVixLibrary.VIX_PROPERTY_VM_POWER_STATE) == IVixLibrary.VIX_POWERSTATE_PAUSED;
     }
+
+
 
 }
