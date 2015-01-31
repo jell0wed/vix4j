@@ -166,6 +166,17 @@ public abstract class VixWrapper implements IVixWrapper
         handleVixJob(this.currentConnection, jobHandle);
     }
 
+    public int VixVM_GetRootSnapshot(int vmHandle, int index) throws VixException {
+        IntByReference ptrRootSnapshotHandle = new IntByReference();
+        int jobHandle = this.currentVix.VixVM_GetRootSnapshot(vmHandle,
+                index,
+                ptrRootSnapshotHandle);
+
+        handleVixJob(this.currentConnection, jobHandle);
+
+        return ptrRootSnapshotHandle.getPointer().getInt(0);
+    }
+
     // ---
 
     private boolean asyncCheckJobCompletion(int jobHandle) throws VixException {

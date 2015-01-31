@@ -19,6 +19,16 @@ public class VixVM {
         this.vmHandleId = handleId;
     }
 
+    int getVMHandleId()
+    {
+        return this.vmHandleId;
+    }
+
+    public VixWrapper getWrapper()
+    {
+        return this.wrapperInstance;
+    }
+
     public void powerOn(VMPowerOperationTypes type) throws VixException
     {
         this.wrapperInstance.VixVM_PowerOn(this.vmHandleId, type);
@@ -61,7 +71,11 @@ public class VixVM {
         this.wrapperInstance.VixVM_Delete(this.vmHandleId);
     }
 
-    public void createSnapshot(String name, String description) throws VixException {
+    public void createSnapshot(String name, String description) throws VixException, VixWrapperInvalidOperation {
+        if(!this.isPoweredOn())
+        {
+            throw new VixWrapperInvalidOperation("The VM must be powered on in order to create a new snapshot");
+        }
         this.createSnapshot(name, description, true);
     }
 
@@ -82,6 +96,10 @@ public class VixVM {
     public boolean isPaused() throws VixException
     {
         return this.wrapperInstance.getPropertyValueAsInteger(this.vmHandleId, IVixLibrary.VIX_PROPERTY_VM_POWER_STATE) == IVixLibrary.VIX_POWERSTATE_PAUSED;
+    }
+
+    public boolean hasToolsRunning() throws VixException {
+        return this.wrapperInstance.getPropertyValueAsInteger(this.vmHandleId, IVixLibrary.VIX_PROPERTY_VM_TOOLS_STATE) == IVixLibrary.VIX_TOOLSSTATE_RUNNING;
     }
 
 
